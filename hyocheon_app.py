@@ -52,7 +52,7 @@ def get_vectorstore(_docs):
 # PDF 문서 로드-벡터 DB 저장-검색기-히스토리 모두 합친 Chain 구축
 @st.cache_resource
 def initialize_components():
-    file_path = "인물사전 정리.pdf"
+    file_path = r"C:\Users\sharp\OneDrive\Desktop\hyochoen_high\인물사전 정리.pdf"
     pages = load_and_split_pdf(file_path)
     vectorstore = get_vectorstore(pages)
     retriever = vectorstore.as_retriever()
@@ -76,6 +76,7 @@ def initialize_components():
     If you don't know the answer, just say that you don't know. \
     Keep the answer perfect. please use imogi with the answer.
     대답은 한국어로 하고, 존댓말을 써줘.\
+    혹시 뭘 할 수 있냐고 물어보거나 소개를 물어보면 '이근학'에 대하여 알려 줄 수 있다고 대답해줘.
 
     {context}"""
     qa_prompt = ChatPromptTemplate.from_messages(
@@ -92,11 +93,7 @@ def initialize_components():
     rag_chain = create_retrieval_chain(history_aware_retriever, question_answer_chain)
     return rag_chain
 
-# Streamlit UI
-st.header("순천효천고등학교 2009년 1학년 11반 챗봇 💬")
-st.subheader("만든이 : CJ올리브네트웍스 김현건 연구원")
-#option = st.selectbox("Select GPT Model", ("gpt-4o-mini", "gpt-3.5-turbo-0125"))
-#rag_chain = initialize_components(option)
+
 rag_chain = initialize_components()
 
 chat_history = StreamlitChatMessageHistory(key="chat_messages")
@@ -109,15 +106,19 @@ conversational_rag_chain = RunnableWithMessageHistory(
     output_messages_key="answer",
 )
 
+# Streamlit UI
+st.header("순천효천고등학교 2009년 1학년 11반 챗봇 💬")
+st.subheader("만든이 : 김현건")
 
+# 인사 메시지 먼저 출력
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", 
-                                     "content": "1학년 11반에 대하여 무엇이든 물어보세요!"}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "안녕하세요! 1학년 11반에 대하여 무엇이든 물어보세요!"}]
 
-for msg in chat_history.messages:
-    st.chat_message(msg.type).write(msg.content)
+# 메시지 출력
+for msg in st.session_state["messages"]:
+    st.chat_message(msg["role"]).write(msg["content"])
 
-
+# 사용자의 입력 처리
 if prompt_message := st.chat_input("파일럿 버전으로 '이근학'님에 대한 질문만 가능합니다."):
     st.chat_message("human").write(prompt_message)
     with st.chat_message("ai"):
@@ -126,9 +127,5 @@ if prompt_message := st.chat_input("파일럿 버전으로 '이근학'님에 대
             response = conversational_rag_chain.invoke(
                 {"input": prompt_message},
                 config)
-            
             answer = response['answer']
             st.write(answer)
-            with st.expander("참고 문서 확인"):
-                for doc in response['context']:
-                    st.markdown(doc.metadata['source'], help=doc.page_content)
