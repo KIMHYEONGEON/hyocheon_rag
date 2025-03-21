@@ -108,7 +108,7 @@ conversational_rag_chain = RunnableWithMessageHistory(
 
 # Streamlit UI
 st.header("순천효천고등학교 2009년 1학년 11반 챗봇 💬")
-st.subheader("김현건 연구원")
+st.subheader("만든이 : 김현건 연구원")
 
 # 초기 메시지 설정
 if "messages" not in st.session_state:
