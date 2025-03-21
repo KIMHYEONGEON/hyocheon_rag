@@ -7,3 +7,4 @@ langchain-chroma
 pysqlite3-binary
 pypdf
 langchain-text-splitters
+pysqlite3-binary --upgrade
