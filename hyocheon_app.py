@@ -52,7 +52,7 @@ def get_vectorstore(_docs):
 # PDF 문서 로드-벡터 DB 저장-검색기-히스토리 모두 합친 Chain 구축
 @st.cache_resource
 def initialize_components():
-    file_path = "인물사전 정리.pdf"
+    file_path = "./인물사전 정리.pdf"
     pages = load_and_split_pdf(file_path)
     vectorstore = get_vectorstore(pages)
     retriever = vectorstore.as_retriever()
@@ -108,18 +108,28 @@ conversational_rag_chain = RunnableWithMessageHistory(
 
 # Streamlit UI
 st.header("순천효천고등학교 2009년 1학년 11반 챗봇 💬")
-st.subheader("만든이 : 김현건")
+st.subheader("김현건 연구원")
 
-# 인사 메시지 먼저 출력
+# 초기 메시지 설정
 if "messages" not in st.session_state:
-    st.session_state["messages"] = [{"role": "assistant", "content": "안녕하세요! 1학년 11반에 대하여 무엇이든 물어보세요!"}]
+    st.session_state["messages"] = [{"role": "assistant", "content": "1학년 11반에 대하여 무엇이든 물어보세요!"}]
 
-# 메시지 출력
-for msg in st.session_state["messages"]:
-    st.chat_message(msg["role"]).write(msg["content"])
+for msg in chat_history.messages:
+    st.chat_message(msg.type).write(msg.content)
 
-# 사용자의 입력 처리
-if prompt_message := st.chat_input("파일럿 버전으로 '이근학'님에 대한 질문만 가능합니다."):
+rag_chain = initialize_components()
+
+chat_history = StreamlitChatMessageHistory(key="chat_messages")
+
+conversational_rag_chain = RunnableWithMessageHistory(
+    rag_chain,
+    lambda session_id: chat_history,
+    input_messages_key="input",
+    history_messages_key="history",
+    output_messages_key="answer",
+)
+
+if prompt_message := st.chat_input("현재'이근학'님에 대한 질문만 가능합니다."):
     st.chat_message("human").write(prompt_message)
     with st.chat_message("ai"):
         with st.spinner("Thinking..."):
@@ -127,5 +137,6 @@ if prompt_message := st.chat_input("파일럿 버전으로 '이근학'님에 대
             response = conversational_rag_chain.invoke(
                 {"input": prompt_message},
                 config)
+            
             answer = response['answer']
             st.write(answer)
