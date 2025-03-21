@@ -1,4 +1,4 @@
-pysqlite-binary
+pysqlite-binary==0.5.1.3380300
 streamlit
 langchain
 langchain-community
