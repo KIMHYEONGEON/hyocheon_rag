@@ -129,7 +129,7 @@ conversational_rag_chain = RunnableWithMessageHistory(
     output_messages_key="answer",
 )
 
-if prompt_message := st.chat_input("현재'이근학'님에 대한 질문만 가능합니다."):
+if prompt_message := st.chat_input("이근학,백길호에 대한 질문만 가능합니다."):
     st.chat_message("human").write(prompt_message)
     with st.chat_message("ai"):
         with st.spinner("Thinking..."):
