@@ -98,14 +98,6 @@ rag_chain = initialize_components()
 
 chat_history = StreamlitChatMessageHistory(key="chat_messages")
 
-conversational_rag_chain = RunnableWithMessageHistory(
-    rag_chain,
-    lambda session_id: chat_history,
-    input_messages_key="input",
-    history_messages_key="history",
-    output_messages_key="answer",
-)
-
 # Streamlit UI
 st.header("순천효천고등학교 2009년 1학년 11반 챗봇 💬")
 st.subheader("만든이 : 김현건 연구원")
