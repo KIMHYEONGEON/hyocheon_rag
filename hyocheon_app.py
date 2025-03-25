@@ -94,13 +94,12 @@ def initialize_components():
     return rag_chain
 
 
-rag_chain = initialize_components()
-
-chat_history = StreamlitChatMessageHistory(key="chat_messages")
-
 # Streamlit UI
 st.header("순천효천고등학교 2009년 1학년 11반 챗봇 💬")
 st.subheader("만든이 : 김현건 연구원")
+
+rag_chain = initialize_components()
+chat_history = StreamlitChatMessageHistory(key="chat_messages")
 
 # 초기 메시지 설정
 if "messages" not in st.session_state:
@@ -108,10 +107,6 @@ if "messages" not in st.session_state:
 
 for msg in chat_history.messages:
     st.chat_message(msg.type).write(msg.content)
-
-rag_chain = initialize_components()
-
-chat_history = StreamlitChatMessageHistory(key="chat_messages")
 
 conversational_rag_chain = RunnableWithMessageHistory(
     rag_chain,
