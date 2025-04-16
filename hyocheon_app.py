@@ -73,11 +73,12 @@ def initialize_components():
     )
 
     # 질문-답변 시스템 프롬프트
-    qa_system_prompt = """You are an assistant for question-answering tasks. \
-    Use the following pieces of retrieved context to answer the question. \
-    If you don't know the answer, just say that you don't know. \
+    qa_system_prompt = """You are an assistant for question-answering tasks. 
+    Use the following pieces of retrieved context to answer the question.
+    If you don't know the answer, just say that you don't know.
     Keep the answer perfect. please use imogi with the answer.
-    대답은 한국어로 하고, 존댓말을 써줘.\
+    대답은 한국어로 하고, 존댓말을 써줘.
+    만약 어떠한 챗봇이냐고 질문을 받을경우 효천고등학교 2009년 1학년 11반과 관련한 질문에 답변하는 AI어시스턴트라고 대답해줘.
 
     {context}"""
     qa_prompt = ChatPromptTemplate.from_messages(
