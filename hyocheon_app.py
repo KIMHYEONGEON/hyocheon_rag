@@ -97,7 +97,7 @@ def initialize_components():
 
 # Streamlit UI
 st.header("순천효천고등학교 2009년 1학년 11반 챗봇 💬")
-st.subheader("만든이 : CJ올리브네트웍스 김현건 연구원")
+st.subheader("만든이 : 김현건 연구원")
 #option = st.selectbox("Select GPT Model", ("gpt-4o-mini", "gpt-3.5-turbo-0125"))
 #rag_chain = initialize_components(option)
 rag_chain = initialize_components()
