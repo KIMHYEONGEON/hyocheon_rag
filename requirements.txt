@@ -1,9 +1,7 @@
 streamlit
 langchain
-langchain-core
 langchain-community
 langchain-openai
-openai
-chromadb
-tiktoken
-pysqlite3
+langchain-core
+langchain-chroma
+pysqlite3-binary
