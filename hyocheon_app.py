@@ -1,7 +1,8 @@
 __import__('pysqlite3')
 import sys
 sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
-
+import warnings
+warnings.filterwarnings("ignore")
 import os
 import streamlit as st
 import pickle
@@ -119,7 +120,7 @@ for msg in chat_history.messages:
     st.chat_message(msg.type).write(msg.content)
 
 
-if prompt_message := st.chat_input("파일럿 버전으로 '이근학'님에 대한 질문만 가능합니다."):
+if prompt_message := st.chat_input("'이근학','백길호'님에 대한 질문만 가능합니다."):
     st.chat_message("human").write(prompt_message)
     with st.chat_message("ai"):
         with st.spinner("Thinking..."):
@@ -127,9 +128,6 @@ if prompt_message := st.chat_input("파일럿 버전으로 '이근학'님에 대
             response = conversational_rag_chain.invoke(
                 {"input": prompt_message},
                 config)
-            
             answer = response['answer']
             st.write(answer)
-            with st.expander("참고 문서 확인"):
-                for doc in response['context']:
-                    st.markdown(doc.metadata['source'], help=doc.page_content)
+            
